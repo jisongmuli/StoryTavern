@@ -1,0 +1,34 @@
+extends: null
+productName: StoryTavern
+appId: com.local.storytavern
+asar: true
+asarUnpack:
+  - "**/*.{node,dll}"
+  - "**/node_modules/libsql/**"
+files:
+  - "dist"
+  - "node_modules"
+  - "!node_modules/@types"
+  - "!node_modules/undici-types"
+  - "package.json"
+beforePack: .erb/scripts/ensure-app-deps.cjs
+afterPack: .erb/scripts/after-pack.cjs
+directories:
+  app: release/app
+  buildResources: assets
+  output: dist-tavern/windows
+win:
+  target:
+    - target: dir
+      arch: [x64]
+    - target: nsis
+      arch: [x64]
+  artifactName: ${productName}-${version}-Setup.${ext}
+  signAndEditExecutable: false
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  include: assets/installer.nsh
+extraResources:
+  - ./assets/**
+publish: null
